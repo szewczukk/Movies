@@ -7,6 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="grid" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="162*"/>
+            <RowDefinition Height="55*"/>
+        </Grid.RowDefinitions>
+        <DataGrid x:Name="moviesGrid" Margin="10,10,10,107" />
+        <DataGrid x:Name="genresGrid" Margin="405,222,10,10" Grid.RowSpan="2"/>
+        <DataGrid x:Name="directorsGrid" Margin="10,222,400,10" Grid.RowSpan="2"/>
     </Grid>
 </Window>

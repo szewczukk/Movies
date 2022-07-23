@@ -20,40 +20,35 @@ namespace MoviesApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        public class MovieViewModel
-        {
-            public string Name { get; set; }
-            public string Director { get; set; }
-            public string Genres { get; set; }
-        }
-
         public MainWindow()
         {
             InitializeComponent();
 
             using (var db = new DatabaseContext())
             {
-                var movies = (from m in db.Movies
-                             select new
-                             {
-                                 Name = m.Name,
-                                 DirectorFirstName = m.Director.FirstName,
-                                 DirectorLastName = m.Director.LastName,
-                                 Genres = m.Genres.Select(g => g.Name).ToList(),
-                             }).ToList();
+                this.moviesGrid.ItemsSource = (from m in db.Movies
+                                               select new
+                                               {
+                                                   Id = m.Id,
+                                                   Name = m.Name,
+                                                   Director = m.Director,
+                                                   Genres = m.Genres.Select(g => g.Name).ToList(),
+                                               }).ToList();
 
-                var moviesList = new List<MovieViewModel>();
-                foreach (var movie in movies)
-                {
-                    moviesList = moviesList.Append(new MovieViewModel
-                    {
-                        Name = movie.Name,
-                        Director = $"{movie.DirectorFirstName} {movie.DirectorLastName}",
-                        Genres = string.Join(", ", movie.Genres)
-                    }).ToList();
-                }
+                this.directorsGrid.ItemsSource = (from d in db.Directors
+                                                  select new
+                                                  {
+                                                      Id = d.Id,
+                                                      FirstName = d.FirstName,
+                                                      LastName = d.LastName
+                                                  }).ToList();
 
-                this.grid.ItemsSource = moviesList;
+                this.genresGrid.ItemsSource = (from g in db.Genres
+                                               select new
+                                               {
+                                                   Id = g.Id,
+                                                   Genre = g.Name
+                                               }).ToList();
             }
         }
     }

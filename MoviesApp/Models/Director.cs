@@ -14,5 +14,10 @@ namespace MoviesApp.Models
 
         [Required]
         public string LastName{ get; set; }
+
+        public override string ToString()
+        {
+            return $"{ FirstName } { LastName }";
+        }
     }
 }
