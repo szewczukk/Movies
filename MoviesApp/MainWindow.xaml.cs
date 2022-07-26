@@ -32,7 +32,10 @@ namespace MoviesApp
                                                    Id = m.Id,
                                                    Name = m.Name,
                                                    Director = m.Director,
-                                                   Genres = m.Genres.Select(g => g.Name).ToList(),
+                                                   Genres = m.Genres.Select(g => new
+                                                   {
+                                                       Name = g.Name
+                                                   }).ToList(),
                                                }).ToList();
 
                 this.directorsGrid.ItemsSource = (from d in db.Directors
@@ -47,7 +50,7 @@ namespace MoviesApp
                                                select new
                                                {
                                                    Id = g.Id,
-                                                   Genre = g.Name
+                                                   Name = g.Name
                                                }).ToList();
             }
         }
