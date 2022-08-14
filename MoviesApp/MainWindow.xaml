@@ -9,35 +9,58 @@
     <Grid>
         <Grid.Resources>
             <DataTemplate x:Key="GenresTemplate">
-                <ListView ItemsSource="{ Binding Genres }">
-                    <ListView.ItemTemplate>
+                <ItemsControl ItemsSource="{ Binding Genres }">
+                    <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{ Binding Path=Name, Mode=OneWay }" />
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </DataTemplate>
         </Grid.Resources>
-        <DataGrid x:Name="moviesGrid" Margin="10,10,10,217" AutoGenerateColumns="False">
+        <DataGrid x:Name="moviesGrid" Margin="10,10,400,217" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{ Binding Id }"/>
-                <DataGridTextColumn Header="Name" Binding="{ Binding Name }"/>
-                <DataGridTextColumn Header="Director" Binding="{ Binding Director }"/>
+                <DataGridTextColumn Header="Id" Binding="{ Binding Id, Mode=OneWay }"/>
+                <DataGridTextColumn Header="Name" Binding="{ Binding Name, Mode=OneWay  }"/>
+                <DataGridTextColumn Header="Director" Binding="{ Binding Director, Mode=OneWay  }"/>
                 <DataGridTemplateColumn Header="Genres" CellTemplate="{ StaticResource GenresTemplate }" />
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid x:Name="genresGrid" Margin="405,222,10,10" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{ Binding Id }"/>
-                <DataGridTextColumn Header="Genre" Binding="{ Binding Name }"/>
+                <DataGridTextColumn Header="Id" Binding="{ Binding Id, Mode=OneWay  }"/>
+                <DataGridTextColumn Header="Genre" Binding="{ Binding Name, Mode=OneWay  }"/>
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid x:Name="directorsGrid" Margin="10,222,400,10" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{ Binding Id }"/>
-                <DataGridTextColumn Header="First name" Binding="{ Binding FirstName }"/>
-                <DataGridTextColumn Header="Last name" Binding="{ Binding LastName }"/>
+                <DataGridTextColumn Header="Id" Binding="{ Binding Id, Mode=OneWay  }"/>
+                <DataGridTextColumn Header="First name" Binding="{ Binding FirstName, Mode=OneWay  }"/>
+                <DataGridTextColumn Header="Last name" Binding="{ Binding LastName, Mode=OneWay  }"/>
             </DataGrid.Columns>
         </DataGrid>
+        <TextBox x:Name="movieName" HorizontalAlignment="Left" Margin="655,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <ComboBox x:Name="directorsComboBox" HorizontalAlignment="Left" Margin="655,42,0,0" VerticalAlignment="Top" Width="120" SelectedValuePath="Id" SelectedValue="{ Binding Id }">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{ Binding FirstName, Mode=OneWay  }" />
+                        <TextBlock Text=" " />
+                        <TextBlock Text="{ Binding LastName, Mode=OneWay  }" />
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Label Content="Name" HorizontalAlignment="Left" Margin="598,6,0,0" VerticalAlignment="Top" Width="86" Height="31"/>
+        <Label Content="Director" HorizontalAlignment="Left" Margin="598,53,0,0" VerticalAlignment="Top" Width="86" Height="31"/>
+        <Label Content="Genres" HorizontalAlignment="Left" Margin="598,89,0,0" VerticalAlignment="Top" Width="59" Height="31"/>
+        <ListBox x:Name="genresListBox" Margin="662,87,20,238" RenderTransformOrigin="0.5,0.5" SelectionMode="Multiple">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{ Binding Name, Mode=OneWay  }" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="585,154,0,0" VerticalAlignment="Top" Click="CreateMovieButtonClicked"/>
     </Grid>
 </Window>
