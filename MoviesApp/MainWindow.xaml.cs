@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoviesApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MoviesApp
 {
@@ -21,93 +23,47 @@ namespace MoviesApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly DatabaseContext databaseContext = new();
+
+        private readonly CollectionViewSource genresViewSource;
+        private readonly CollectionViewSource moviesViewSource;
+        private readonly CollectionViewSource directorsViewSource;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            using (var db = new DatabaseContext())
-            {
-                this.moviesGrid.ItemsSource = (from m in db.Movies
-                                               select new
-                                               {
-                                                   Id = m.Id,
-                                                   Name = m.Name,
-                                                   Director = m.Director,
-                                                   Genres = m.Genres.Select(g => new
-                                                   {
-                                                       Name = g.Name
-                                                   }).ToList(),
-                                               }).ToList();
+            genresViewSource = (CollectionViewSource)FindResource(nameof(genresViewSource));
+            moviesViewSource = (CollectionViewSource)FindResource(nameof(moviesViewSource));
+            directorsViewSource = (CollectionViewSource)FindResource(nameof(directorsViewSource));
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            databaseContext.Database.EnsureCreated();
 
-                var directors = (from d in db.Directors
-                                 select new
-                                 {
-                                     Id = d.Id,
-                                     FirstName = d.FirstName,
-                                     LastName = d.LastName
-                                 }).ToList();
+            databaseContext.Genres.Load();
+            databaseContext.Movies.Load();
+            databaseContext.Directors.Load();
 
-                var genres = (from g in db.Genres
-                              select new
-                              {
-                                  Id = g.Id,
-                                  Name = g.Name
-                              }).ToList();
-
-                this.directorsGrid.ItemsSource = directors;
-                this.directorsComboBox.ItemsSource = directors;
-                this.genresGrid.ItemsSource = genres;
-                this.genresListBox.ItemsSource = genres;
-            }
+            genresViewSource.Source = databaseContext.Genres.Local.ToObservableCollection();
+            moviesViewSource.Source = databaseContext.Movies.Local.ToObservableCollection();
+            directorsViewSource.Source = databaseContext.Directors.Local.ToObservableCollection();
         }
 
-        private void CreateMovieButtonClicked(object sender, RoutedEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            using (var db = new DatabaseContext())
-            {
-                var rawDirector = (int)this.directorsComboBox.SelectedValue;
-                var director = (from d in db.Directors where d.Id == rawDirector select d).ToList()[0];
+            databaseContext.Dispose();
 
-                var rawGenres = this.genresListBox.SelectedItems;
+            base.OnClosing(e);
+        }
 
-                var genres = new List<Genre>();
+        private void Button_Clicked(object sender, RoutedEventArgs e)
+        {
+            databaseContext.SaveChanges();
 
-                foreach (var g in this.genresListBox.SelectedItems)
-                {
-                    genres.Add(new Genre()
-                    {
-                        Id = (int)g.GetType().GetProperty("Id").GetValue(g, null),
-                        Name = (string)g.GetType().GetProperty("Name").GetValue(g, null)
-                    });
-                }
-
-                var movie = new Movie()
-                {
-                    Name = this.movieName.Text,
-                    Director = new Director()
-                    {
-                        Id = rawDirector,
-                        FirstName = director.FirstName,
-                        LastName = director.LastName
-                    },
-                    Genres = genres
-                };
-
-                db.Movies.Add(movie);
-                db.SaveChanges();
-
-                this.moviesGrid.ItemsSource = (from m in db.Movies
-                                               select new
-                                               {
-                                                   Id = m.Id,
-                                                   Name = m.Name,
-                                                   Director = m.Director,
-                                                   Genres = m.Genres.Select(g => new
-                                                   {
-                                                       Name = g.Name
-                                                   }).ToList(),
-                                               }).ToList();
-            }
+            moviesGrid.Items.Refresh();
+            directorsGrid.Items.Refresh();
+            genresGrid.Items.Refresh();
         }
     }
 }

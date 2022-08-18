@@ -5,48 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoviesApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource x:Key="genresViewSource"/>
+        <CollectionViewSource x:Key="moviesViewSource"/>
+        <CollectionViewSource x:Key="directorsViewSource"/>
+    </Window.Resources>
     <Grid>
         <Grid.Resources>
             <DataTemplate x:Key="GenresTemplate">
                 <ItemsControl ItemsSource="{ Binding Genres }">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{ Binding Path=Name, Mode=OneWay }" />
+                            <TextBlock Text="{ Binding Path=Name }" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </DataTemplate>
         </Grid.Resources>
-        <DataGrid x:Name="moviesGrid" Margin="10,10,400,217" AutoGenerateColumns="False">
+        <DataGrid x:Name="moviesGrid" Margin="10,10,400,217" AutoGenerateColumns="False" ItemsSource="{ Binding Source={ StaticResource moviesViewSource } }" EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{ Binding Id, Mode=OneWay }"/>
-                <DataGridTextColumn Header="Name" Binding="{ Binding Name, Mode=OneWay  }"/>
-                <DataGridTextColumn Header="Director" Binding="{ Binding Director, Mode=OneWay  }"/>
+                <DataGridTextColumn Header="Id" Binding="{ Binding Id }" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Name" Binding="{ Binding Name }"/>
+                <DataGridTextColumn Header="Director" Binding="{ Binding Director }"/>
                 <DataGridTemplateColumn Header="Genres" CellTemplate="{ StaticResource GenresTemplate }" />
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid x:Name="genresGrid" Margin="405,222,10,10" AutoGenerateColumns="False">
+        <DataGrid x:Name="genresGrid" Margin="405,222,10,10" AutoGenerateColumns="False" ItemsSource="{ Binding Source={ StaticResource genresViewSource } }" EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{ Binding Id, Mode=OneWay  }"/>
-                <DataGridTextColumn Header="Genre" Binding="{ Binding Name, Mode=OneWay  }"/>
+                <DataGridTextColumn Header="Id" Binding="{ Binding Id }" IsReadOnly="True" />
+                <DataGridTextColumn Header="Genre" Binding="{ Binding Name }"/>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid x:Name="directorsGrid" Margin="10,222,400,10" AutoGenerateColumns="False">
+        <DataGrid x:Name="directorsGrid" Margin="10,222,400,10" AutoGenerateColumns="False" ItemsSource="{ Binding Source={ StaticResource directorsViewSource } }">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{ Binding Id, Mode=OneWay  }"/>
-                <DataGridTextColumn Header="First name" Binding="{ Binding FirstName, Mode=OneWay  }"/>
-                <DataGridTextColumn Header="Last name" Binding="{ Binding LastName, Mode=OneWay  }"/>
+                <DataGridTextColumn Header="Id" Binding="{ Binding Id }" IsReadOnly="True"/>
+                <DataGridTextColumn Header="First name" Binding="{ Binding FirstName }"/>
+                <DataGridTextColumn Header="Last name" Binding="{ Binding LastName }"/>
             </DataGrid.Columns>
         </DataGrid>
         <TextBox x:Name="movieName" HorizontalAlignment="Left" Margin="655,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="directorsComboBox" HorizontalAlignment="Left" Margin="655,42,0,0" VerticalAlignment="Top" Width="120" SelectedValuePath="Id" SelectedValue="{ Binding Id }">
+        <ComboBox x:Name="directorsComboBox" HorizontalAlignment="Left" Margin="655,42,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{ Binding Source={ StaticResource directorsViewSource } }">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{ Binding FirstName, Mode=OneWay  }" />
+                        <TextBlock Text="{ Binding FirstName }" />
                         <TextBlock Text=" " />
-                        <TextBlock Text="{ Binding LastName, Mode=OneWay  }" />
+                        <TextBlock Text="{ Binding LastName}" />
                     </StackPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
@@ -54,13 +59,13 @@
         <Label Content="Name" HorizontalAlignment="Left" Margin="598,6,0,0" VerticalAlignment="Top" Width="86" Height="31"/>
         <Label Content="Director" HorizontalAlignment="Left" Margin="598,53,0,0" VerticalAlignment="Top" Width="86" Height="31"/>
         <Label Content="Genres" HorizontalAlignment="Left" Margin="598,89,0,0" VerticalAlignment="Top" Width="59" Height="31"/>
-        <ListBox x:Name="genresListBox" Margin="662,87,20,238" RenderTransformOrigin="0.5,0.5" SelectionMode="Multiple">
+        <ListBox x:Name="genresListBox" Margin="662,87,20,238" RenderTransformOrigin="0.5,0.5" SelectionMode="Multiple" ItemsSource="{ Binding Source={ StaticResource genresViewSource } }">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{ Binding Name, Mode=OneWay  }" />
+                    <TextBlock Text="{ Binding Name }" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="585,154,0,0" VerticalAlignment="Top" Click="CreateMovieButtonClicked"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="585,154,0,0" VerticalAlignment="Top" Click="Button_Clicked"/>
     </Grid>
 </Window>
