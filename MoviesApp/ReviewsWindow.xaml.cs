@@ -27,7 +27,6 @@ namespace MoviesApp
         private readonly DatabaseContext databaseContext = new();
 
         private readonly CollectionViewSource reviewsViewSource;
-        private readonly CollectionViewSource moviesViewSource;
 
         private readonly int MovieId;
 
@@ -38,7 +37,6 @@ namespace MoviesApp
             this.MovieId = movieId;
 
             reviewsViewSource = (CollectionViewSource)FindResource(nameof(reviewsViewSource));
-            moviesViewSource = (CollectionViewSource)FindResource(nameof(moviesViewSource));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -48,7 +46,6 @@ namespace MoviesApp
             databaseContext.Reviews.Load();
             databaseContext.Movies.Load();
 
-            moviesViewSource.Source = databaseContext.Movies.Local.ToObservableCollection();
             reviewsViewSource.Source = databaseContext.Reviews.Local
                 .Where(r => r.MovieId == this.MovieId).ToList();
         }
@@ -61,8 +58,20 @@ namespace MoviesApp
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var review = this.textBox.Text;
+
+            databaseContext.Reviews.Add(
+                new Review
+                {
+                    Content = review,
+                    MovieId = this.MovieId
+                }
+            );
+
             databaseContext.SaveChanges();
 
+            reviewsViewSource.Source = databaseContext.Reviews.Local
+                .Where(r => r.MovieId == this.MovieId).ToList();
             reviewsGrid.Items.Refresh();
         }
     }

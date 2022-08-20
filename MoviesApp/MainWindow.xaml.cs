@@ -77,5 +77,30 @@ namespace MoviesApp
                 reviewsWindow.Show();
             }
         }
+
+        private T? GetSelectedItemsProperty<T>(object selectedItem, string property)
+        {
+            return (T)selectedItem.GetType().GetProperty(property).GetValue(selectedItem, null);
+        }
+
+        private void NewMovieButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            var title = this.NewMovieTitlesComboBox.Text;
+            var directorsId = GetSelectedItemsProperty<int>(this.NewMovieDirectorsComboBox.SelectedItem, "DirectorId");
+            var genresId = GetSelectedItemsProperty<int>(this.NewMovieGenresComboBox.SelectedItem, "GenreId");
+
+
+            databaseContext.Movies.Add(
+                new Movie
+                {
+                    Title = title,
+                    DirectorId = directorsId,
+                    GenreId = genresId,
+                }
+            );
+
+            databaseContext.SaveChanges();
+            this.moviesGrid.Items.Refresh();
+        }
     }
 }

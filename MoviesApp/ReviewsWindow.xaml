@@ -5,19 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoviesApp"
         mc:Ignorable="d"
-        Title="ReviewsWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="ReviewsWindow" Height="450" Width="800" Loaded="Window_Loaded" ResizeMode="NoResize">
     <Window.Resources>
         <CollectionViewSource x:Key="reviewsViewSource"/>
-        <CollectionViewSource x:Key="moviesViewSource"/>
     </Window.Resources>
-    <Grid>
-        <DataGrid x:Name="reviewsGrid" AutoGenerateColumns="False" ItemsSource="{ Binding Source={ StaticResource reviewsViewSource } }" EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected" Margin="10,10,10,77">
+    <Grid Margin="8, 8, 8, 8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label HorizontalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="3">To delete an item, select it and press delete key on your keyboard, double click an item to edit it</Label>
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="2" x:Name="reviewsGrid" AutoGenerateColumns="False" ItemsSource="{ Binding Source={ StaticResource reviewsViewSource } }" EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected" CanUserAddRows="False" HorizontalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch" Margin="0,8,0,8">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{ Binding ReviewId }" />
-                <DataGridTextColumn Header="Review" Binding="{ Binding Content }" />
-                <DataGridComboBoxColumn Header="Movie" SelectedItemBinding="{ Binding Movie }" ItemsSource="{ Binding Source={ StaticResource moviesViewSource } }" SelectedValueBinding="{ Binding MovieId }" />
+                <DataGridTextColumn Header="Review" Binding="{ Binding Content }" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Save" HorizontalAlignment="Center" Margin="0,362,0,0" VerticalAlignment="Top" Height="29" Width="136" Click="Button_Click"/>
+        <Button Grid.Row="3" Grid.Column="0" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click" Width="64" Margin="0,0,8,0"/>
+        <TextBox Grid.Row="3" Grid.Column="1" x:Name="textBox" TextWrapping="Wrap" Text="Type your review here" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
     </Grid>
 </Window>
