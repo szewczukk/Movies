@@ -42,5 +42,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
+        <Button Content="Save" HorizontalAlignment="Center" Margin="0,374,0,0" VerticalAlignment="Top" Height="25" Width="104" Click="Button_Click"/>
     </Grid>
 </Window>

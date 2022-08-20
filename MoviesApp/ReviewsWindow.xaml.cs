@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -19,37 +20,38 @@ using Microsoft.EntityFrameworkCore;
 namespace MoviesApp
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ReviewsWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ReviewsWindow : Window
     {
         private readonly DatabaseContext databaseContext = new();
 
-        private readonly CollectionViewSource genresViewSource;
+        private readonly CollectionViewSource reviewsViewSource;
         private readonly CollectionViewSource moviesViewSource;
-        private readonly CollectionViewSource directorsViewSource;
 
-        public MainWindow()
+        private readonly int MovieId;
+
+        public ReviewsWindow(int movieId)
         {
             InitializeComponent();
 
-            genresViewSource = (CollectionViewSource)FindResource(nameof(genresViewSource));
+            this.MovieId = movieId;
+
+            reviewsViewSource = (CollectionViewSource)FindResource(nameof(reviewsViewSource));
             moviesViewSource = (CollectionViewSource)FindResource(nameof(moviesViewSource));
-            directorsViewSource = (CollectionViewSource)FindResource(nameof(directorsViewSource));
         }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             databaseContext.Database.EnsureCreated();
 
-            databaseContext.Genres.Load();
+            databaseContext.Reviews.Load();
             databaseContext.Movies.Load();
-            databaseContext.Directors.Load();
 
-            genresViewSource.Source = databaseContext.Genres.Local.ToObservableCollection();
             moviesViewSource.Source = databaseContext.Movies.Local.ToObservableCollection();
-            directorsViewSource.Source = databaseContext.Directors.Local.ToObservableCollection();
+            reviewsViewSource.Source = databaseContext.Reviews.Local
+                .Where(r => r.MovieId == this.MovieId).ToList();
         }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             databaseContext.Dispose();
@@ -57,25 +59,11 @@ namespace MoviesApp
             base.OnClosing(e);
         }
 
-        private void SaveMenuItem_Clicked(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             databaseContext.SaveChanges();
 
-            moviesGrid.Items.Refresh();
-            genresGrid.Items.Refresh();
-            directorsGrid.Items.Refresh();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var movieId = ((Button)sender).DataContext as int?;
-
-            if (movieId.HasValue)
-            {
-                var reviewsWindow = new ReviewsWindow(movieId.Value);
-
-                reviewsWindow.Show();
-            }
+            reviewsGrid.Items.Refresh();
         }
     }
 }
