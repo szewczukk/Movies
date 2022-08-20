@@ -57,13 +57,13 @@ namespace MoviesApp
             base.OnClosing(e);
         }
 
-        private void Button_Clicked(object sender, RoutedEventArgs e)
+        private void SaveMenuItem_Clicked(object sender, RoutedEventArgs e)
         {
             databaseContext.SaveChanges();
 
             moviesGrid.Items.Refresh();
-            directorsGrid.Items.Refresh();
             genresGrid.Items.Refresh();
+            directorsGrid.Items.Refresh();
         }
     }
 }
