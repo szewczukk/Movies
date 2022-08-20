@@ -14,7 +14,11 @@ namespace MoviesApp
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Filename=database.sqlite");
+            var dbFile = ConfigurationManager.AppSettings["dbFile"] as string;
+            if (dbFile != null)
+            {
+                optionsBuilder.UseSqlite(dbFile);
+            }
             optionsBuilder.UseLazyLoadingProxies();
         }
 
