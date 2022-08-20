@@ -1,19 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MoviesApp.Models
 {
     public class Director
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int DirectorId { get; set; }
 
-        [Required]
         public string FirstName { get; set; }
 
-        [Required]
         public string LastName{ get; set; }
+        
+        public virtual ICollection<Movie> Movies { get; set; }
+            = new ObservableCollection<Movie>();
 
         public override string ToString()
         {

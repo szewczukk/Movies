@@ -5,46 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoviesApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" ResizeMode="NoResize">
     <Window.Resources>
         <CollectionViewSource x:Key="genresViewSource"/>
         <CollectionViewSource x:Key="moviesViewSource"/>
         <CollectionViewSource x:Key="directorsViewSource"/>
     </Window.Resources>
-    <DockPanel Margin="0,0,0,8">
-        <Menu DockPanel.Dock="Top" Margin="0,0,0,8">
-            <MenuItem Header="File">
-                <MenuItem Header="Save" Click="SaveMenuItem_Clicked"/>
-            </MenuItem>
-        </Menu>
-        <DataGrid x:Name="moviesGrid" AutoGenerateColumns="False" ItemsSource="{Binding Source={StaticResource moviesViewSource}}" EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected" Margin="8,0,8,0">
+    <Grid>
+        <DataGrid x:Name="moviesGrid" AutoGenerateColumns="False" ItemsSource="{ Binding Source={ StaticResource moviesViewSource } }" EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected" Margin="10,10,400,65">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                <DataGridComboBoxColumn Header="Director" ItemsSource="{Binding Source={StaticResource directorsViewSource}}" SelectedItemBinding="{Binding Director}"/>
-                <DataGridTemplateColumn Header="Genres">
+                <DataGridTextColumn Header="Id" Binding="{ Binding MovieId }" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Title" Binding="{ Binding Title }"/>
+                <DataGridComboBoxColumn Header="Director" ItemsSource="{ Binding Source={ StaticResource directorsViewSource } }" SelectedItemBinding="{ Binding Director }"/>
+                <DataGridComboBoxColumn Header="Genres" ItemsSource="{ Binding Source={ StaticResource genresViewSource } }" SelectedItemBinding="{ Binding Genre }"/>
+                <DataGridTemplateColumn Header="Actions">
                     <DataGridTemplateColumn.CellTemplate>
-                        <ItemContainerTemplate>
-                            <ListBox ItemsSource="{Binding Genres}"/>
-                        </ItemContainerTemplate>
+                        <DataTemplate>
+                            <Button Click="Button_Click" DataContext="{ Binding MovieId }">See reviews</Button>
+                        </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Margin="8,0,8,0">
-            <DataGrid x:Name="genresGrid" AutoGenerateColumns="False" ItemsSource="{Binding Source={StaticResource genresViewSource}}" EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected" Margin="0,0,0,7">
+        <Grid Margin="405,10,10,65">
+            <DataGrid x:Name="genresGrid" AutoGenerateColumns="False" ItemsSource="{Binding Source={StaticResource genresViewSource}}" EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected" Margin="0,0,0,205">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
-                    <DataGridTextColumn Header="Genre" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Id" Binding="{ Binding GenreId }" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Genre" Binding="{ Binding Name }"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <DataGrid x:Name="directorsGrid" AutoGenerateColumns="False" ItemsSource="{Binding Source={StaticResource directorsViewSource}}" Margin="0,8,0,0">
+            <DataGrid x:Name="directorsGrid" AutoGenerateColumns="False" ItemsSource="{ Binding Source={ StaticResource directorsViewSource } }" Margin="0,165,0,0">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="First name" Binding="{Binding FirstName}"/>
-                    <DataGridTextColumn Header="Last name" Binding="{Binding LastName}"/>
+                    <DataGridTextColumn Header="Id" Binding="{ Binding DirectorId }" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="First name" Binding="{ Binding FirstName }"/>
+                    <DataGridTextColumn Header="Last name" Binding="{ Binding LastName }"/>
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
-    </DockPanel>
+        </Grid>
+    </Grid>
 </Window>

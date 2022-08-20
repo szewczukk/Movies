@@ -1,23 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoviesApp.Models
 {
     public class Movie
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int MovieId { get; set; }
 
-        [Required]
-        public string Name { get; set; }
+        public string Title { get; set; }
 
-        [Required]
+        public int DirectorId { get; set; }
+
         public virtual Director Director { get; set; }
 
-        public virtual ICollection<Genre> Genres { get; set; } =
-            new ObservableCollection<Genre>();
+        public int GenreId { get; set; }
+
+        public virtual Genre Genre { get; set; }
+
+        public virtual ICollection<Review> Reviews { get; set; }
+            = new ObservableCollection<Review>();
+
+        public override string ToString()
+        {
+            return Title;
+        }
     }
 }
